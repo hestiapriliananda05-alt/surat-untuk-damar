@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Forest Letter</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Library untuk Mengunduh Gambar (html2canvas) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#05080f',
+                        slate: '#0F172A',
+                        pine: '#1E3A34',
+                        cream: '#F5F1E8',
+                        gold: '#D4B483',
+                        warmwhite: '#FAF9F6'
+                    },
+                    fontFamily: {
+                        title: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"EB Garamond"', 'serif'],
+                        modern: ['"Montserrat"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #05080f;
+            color: #F5F1E8;
+            margin: 0;
+            overflow: hidden; /* Prevent body scroll, handle per section */
+            /* Kursor Hati Emas */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23D4B483" stroke="%23FAF9F6" stroke-width="1.5" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') 12 12, auto;
+        }
+
+        /* Pointer Kursor untuk elemen interaktif */
+        button, a, .envelope-wrapper, textarea {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23D4B483" stroke="%23FAF9F6" stroke-width="1.5" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') 12 12, pointer !important;
+        }
+
+        /* Pages System (Mobile Responsive) */
+        .page-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease-in-out, visibility 1.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow scrolling inside section if content is tall on mobile */
+        }
+        
+        .page-section.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar for elegant scrolling */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(212, 180, 131, 0.4);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 180, 131, 0.7);
+        }
+
+        /* Background Images & Overlay */
+        .bg-full-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: brightness(0.8) contrast(1.1);
+        }
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.6), rgba(5, 8, 15, 0.95));
+            z-index: 1;
+        }
+
+        /* Envelope CSS (Classic Italian White) */
+        .envelope-wrapper {
+            position: relative;
+            width: 260px;
+            height: 160px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .envelope-wrapper {
+                width: 320px;
+                height: 200px;
+            }
+        }
+        .envelope-wrapper:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Back of envelope (Darker ivory) */
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            background-color: #E8E3D9; 
+            border-radius: 2px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+        
+        /* Front folds of envelope (Italian White) */
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            /* Responsive borders */
+            border-left: 130px solid #FDFBF7;
+            border-right: 130px solid #FDFBF7;
+            border-bottom: 85px solid #F4F0E6; 
+            border-top: 85px solid transparent;
+            z-index: 3;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+        @media (min-width: 768px) {
+            .envelope-front {
+                border-left: 160px solid #FDFBF7;
+                border-right: 160px solid #FDFBF7;
+                border-bottom: 100px solid #F4F0E6; 
+                border-top: 100px solid transparent;
+            }
+        }
+
+        /* Top Flap (Pure White) */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 130px solid transparent;
+            border-right: 130px solid transparent;
+            border-top: 90px solid #FFFFFF; 
+            z-index: 4;
+            transform-origin: top;
+            transition: transform 0.8s ease-in-out, z-index 0s 0.4s;
+            filter: drop-shadow(0 3px 3px rgba(0,0,0,0.1));
+        }
+        @media (min-width: 768px) {
+            .envelope-flap {
+                border-left: 160px solid transparent;
+                border-right: 160px solid transparent;
+                border-top: 110px solid #FFFFFF; 
+            }
+        }
+        
+        .envelope-wrapper.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        
+        /* Fake letter peeking out (Warm Cream) */
+        .letter-peek {
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 80%;
+            background-color: #F5F1E8;
+            border-radius: 4px;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: top;
+            padding-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Modal / Real Letter Box */
+        #letter-modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+        #letter-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .letter-content {
+            background-color: #F5F1E8; /* Cream paper aesthetic */
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 95%;
+            width: 700px;
+            max-height: 85vh; /* Responsive height */
+            display: flex;
+            flex-direction: column;
+            transform: translateY(50px);
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #letter-modal.show .letter-content {
+            transform: translateY(0);
+        }
+
+        /* Star Effect Cursor */
+        .star-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #D4B483;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            box-shadow: 0 0 10px #D4B483, 0 0 20px #FAF9F6;
+            animation: fadeOut 1s forwards;
+            z-index: 9999;
+        }
+        @keyframes fadeOut {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* Interactive Magical Ripple (Baru) */
+        .click-ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 180, 131, 0.6);
+            box-shadow: 0 0 15px rgba(212, 180, 131, 0.4), inset 0 0 10px rgba(212, 180, 131, 0.2);
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            animation: rippleEffect 0.8s ease-out forwards;
+            z-index: 9998;
+        }
+        @keyframes rippleEffect {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+
+        /* Buttons */
+        .btn-aesthetic {
+            font-family: 'Montserrat', sans-serif;
+            background: transparent;
+            border: 1px solid #D4B483;
+            color: #D4B483;
+            padding: 12px 28px;
+            border-radius: 4px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        .btn-aesthetic:hover {
+            background-color: rgba(212, 180, 131, 0.1);
+            color: #FAF9F6;
+            box-shadow: 0 0 15px rgba(212, 180, 131, 0.3);
+        }
+
+        /* Animasi Kunang-Kunang & Kupu-Kupu Emas (Baru) */
+        .ambient-firefly {
+            position: fixed;
+            border-radius: 50%;
+            background-color: #D4B483;
+            box-shadow: 0 0 10px #D4B483, 0 0 20px #FAF9F6;
+            pointer-events: none;
+            z-index: 1; /* Di bawah teks, di atas background */
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+        
+        .ambient-butterfly {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            filter: drop-shadow(0 0 8px rgba(212, 180, 131, 0.8));
+            animation: flutterFly linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
+            10% { opacity: 0.8; transform: translateY(90vh) scale(1); }
+            90% { opacity: 0.8; transform: translateY(10vh) scale(1); }
+            100% { transform: translateY(-10vh) scale(0); opacity: 0; }
+        }
+
+        @keyframes flutterFly {
+            0% { transform: translate(0, 110vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.7; }
+            25% { transform: translate(30px, 75vh) rotate(15deg) scale(0.8); }
+            50% { transform: translate(-30px, 50vh) rotate(-10deg) scale(1); }
+            75% { transform: translate(30px, 25vh) rotate(10deg) scale(0.8); }
+            90% { opacity: 0.7; }
+            100% { transform: translate(-10px, -10vh) rotate(-15deg) scale(0.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-midnight antialiased">
+
+    <!-- Audio Element (Kiss The Rain - Yiruma) -->
+    <audio id="bg-music" loop preload="auto">
+        <!-- PANDUAN UNTUK ANDA: 
+             1. Simpan file HTML ini ke komputer/HP Anda.
+             2. Buat sebuah folder baru, lalu masukkan file HTML ini ke dalamnya.
+             3. Download lagu Yiruma (Kiss The Rain) dan masukkan ke dalam folder yang sama.
+             4. Ganti nama file MP3 Anda menjadi persis: kisstherain.mp3 
+             (Pastikan tidak ada spasi atau huruf besar pada nama file MP3-nya) -->
+        <source src="kisstherain.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Audio Control (Hidden until user clicks Masuk) -->
+    <button id="audio-control" onclick="toggleAudio()" class="fixed top-6 right-6 md:bottom-8 md:left-8 md:top-auto md:right-auto z-50 text-gold/60 hover:text-gold transition-colors hidden opacity-0">
+        <i class="fa-solid fa-volume-high text-xl md:text-2xl"></i>
+    </button>
+
+    <!-- Easter Egg Trigger -->
+    <button onclick="showSecret()" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 text-gold/20 hover:text-gold/80 transition-colors opacity-0 animate-[fadeIn_2s_ease-in-out_10s_forwards]">
+        <i class="fa-solid fa-moon text-lg md:text-xl"></i>
+    </button>
+
+    <!-- Section 1: Layar Awal (Entry) -->
+    <section id="sec-entry" class="page-section active">
+        <!-- Background Pegunungan Bintang (Aesthetic) -->
+        <div class="bg-full-cover" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=2070');"></div>
+        <div class="bg-overlay"></div>
+        
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-4xl mt-10 md:mt-0">
+            <!-- Teks Sapaan Dihapus dari sini agar tidak berulang -->
+            
+            <p class="font-body text-2xl md:text-4xl text-cream italic mb-12 leading-relaxed drop-shadow-lg max-w-2xl">
+                "Di bawah langit malam yang tenang ini, ada sebuah pesan yang telah lama menunggu untuk dibaca."
+            </p>
+            
+            <button onclick="startExperience()" class="btn-aesthetic">
+                Masuk
+            </button>
+        </div>
+    </section>
+
+    <!-- Section 2: Intro Sapaan -->
+    <section id="sec-intro" class="page-section">
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-4xl w-full">
+            <h1 class="font-title text-3xl md:text-6xl text-warmwhite font-semibold tracking-wider mb-8 drop-shadow-md">
+                HELLO,<br><span class="text-gold mt-2 block">DAMAR MAQRIBI</span>
+            </h1>
+            
+            <p class="font-body text-xl md:text-2xl text-cream/90 leading-relaxed max-w-2xl mx-auto mb-12 italic">
+                "Aku tidak tahu apakah kamu akan membuka halaman ini sampai akhir, tapi terima kasih sudah meluangkan waktu."
+            </p>
+
+            <button onclick="goToSection('sec-envelope')" class="btn-aesthetic">
+                Mulai Perjalanan
+            </button>
+        </div>
+    </section>
+
+    <!-- Section 3: Surat (Amplop Interaktif) -->
+    <section id="sec-envelope" class="page-section">
+        <div class="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4 py-8">
+            <div class="text-center mb-10 md:mb-16">
+                <h2 class="font-title text-3xl md:text-5xl text-gold mb-4">Ada Surat Untukmu</h2>
+            </div>
+
+            <!-- Amplop Art (Putih Klasik) -->
+            <div class="relative flex flex-col items-center">
+                <div class="envelope-wrapper" id="envelope-trigger" onclick="openEnvelope()">
+                    <div class="envelope-back"></div>
+                    <div class="letter-peek">
+                        <p class="font-title text-sm md:text-base text-pine italic">Tarik suratnya...</p>
+                    </div>
+                    <div class="envelope-front"></div>
+                    <div class="envelope-flap"></div>
+                </div>
+                
+                <!-- Teks Instruksi Bawah Amplop (Kecil & Samar) -->
+                <p class="font-body text-xs md:text-sm text-cream/40 mt-6 italic pointer-events-none">
+                    Klik amplop untuk membukanya.
+                </p>
+            </div>
+
+            <!-- Tombol Lanjut (Muncul setelah baca surat) -->
+            <div id="btn-next-wishes" class="mt-8 md:mt-12 opacity-0 transition-opacity duration-1000 hidden">
+                <button onclick="goToSection('sec-wishes')" class="btn-aesthetic text-xs md:text-sm">
+                    Langkah Selanjutnya <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Surat Modal (Muncul saat amplop diklik) -->
+    <div id="letter-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <!-- Background Gelap untuk menutup area luar -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeLetter()"></div>
+        
+        <!-- Kontainer Kertas Surat (Estetik & Scrollable) -->
+        <div class="letter-content relative z-10">
+            <!-- Tombol Close -->
+            <button onclick="closeLetter()" class="absolute top-3 right-4 md:top-6 md:right-6 text-pine/50 hover:text-pine transition-colors z-20">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+
+            <!-- Isi Surat (Scrollable specific box for mobile fix) -->
+            <div class="p-6 md:p-10 lg:p-12">
+                <div id="letter-scroll-area" class="max-h-[60vh] md:max-h-[70vh] overflow-y-auto custom-scrollbar pr-2 md:pr-4">
+                    <div id="the-letter-text" class="text-left text-[#1E3A34] space-y-4 md:space-y-5 transition-opacity duration-500 opacity-100">
+                        <p class="font-body text-xl md:text-2xl mb-4 md:mb-6 font-semibold">Hai Damar Aku Persembahkan Surat Ini Untukmu,</p>
+                        
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Aku membuat pesan ini karena ada beberapa hal yang selama ini ingin aku sampaikan.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Pertama, aku ingin minta maaf. Aku tahu keputusan yang aku ambil dulu mungkin menyakitkan dan membuatmu kecewa. Aku juga sadar bahwa semuanya terjadi begitu saja tanpa bisa dijelaskan dengan baik.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Aku hanya ingin kamu tahu bahwa saat aku memilih mengakhiri hubungan kita, itu bukan karena aku sudah tidak sayang lagi. Bukan karena aku tidak peduli. Dan bukan karena aku tidak ingin bersamamu.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Sebenarnya, saat itu aku sedang berada dalam keadaan yang membuatku merasa tidak mampu mempertahankan hubungan kita. Sampai sekarang pun, kalau dipikir-pikir lagi, aku masih berharap keadaan waktu itu bisa berbeda.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Aku masih mengingat banyak hal tentang kita. Aku masih mengingat bagaimana kita bisa saling peduli, saling menjaga, dan saling membuat satu sama lain merasa berarti. Semua itu tidak pernah aku anggap sebagai kenangan yang sia-sia.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Aku juga mau jujur sampai sekarang aku masih peduli sama kamu. Kadang aku masih penasaran bagaimana kabarmu, bagaimana hari-harimu berjalan, dan apakah kamu baik-baik saja.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Aku tidak membuat pesan ini untuk memintamu kembali atau memaksamu menunggu. Aku hanya ingin menyampaikan apa yang selama ini ada di pikiranku.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Kalau boleh berharap, aku hanya ingin hubungan kita tidak menjadi canggung atau terasa asing. Aku ingin kita bisa berkomunikasi dengan baik seperti dulu, tanpa ada rasa tidak nyaman di antara kita.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Dan yang paling penting, aku berharap kamu selalu menjaga kesehatanmu, menjaga dirimu baik-baik, dan menjalani hidup dengan bahagia. Karena sejujurnya, aku masih sangat peduli tentang hal itu.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed">
+                            Terima kasih untuk semua hal baik yang pernah kita lalui bersama. Apa pun yang terjadi ke depannya, aku tetap bersyukur karena pernah mengenalmu.
+                        </p>
+                        <p class="font-body text-lg md:text-xl leading-relaxed font-medium mt-4 md:mt-6">
+                            Jaga diri baik-baik ya, Damar.
+                        </p>
+
+                        <div class="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-pine/20 text-right">
+                            <p class="font-title text-xl md:text-2xl italic text-pine">— Hesti <span class="text-red-600 not-italic">❤️</span></p>
+                        </div>
+
+                        <!-- Tombol Aku Sudah Membacanya -->
+                        <div class="mt-10 pb-4 flex justify-center">
+                            <button onclick="confirmRead()" class="font-modern px-6 py-3 border border-pine text-pine rounded-md hover:bg-pine hover:text-cream transition-colors duration-300 text-sm tracking-widest uppercase font-medium">
+                                Aku Sudah Membacanya <span class="text-red-500 ml-1">❤️</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pesan Terima Kasih (Tersembunyi Awalnya) -->
+                    <div id="thank-you-message" class="hidden h-full min-h-[40vh] flex flex-col items-center justify-center text-center px-4 transition-opacity duration-700 opacity-0 my-auto py-10">
+                        <p class="font-title text-2xl md:text-3xl text-pine italic leading-relaxed mb-8">
+                            "Terima kasih sudah meluangkan waktu membaca semuanya sampai akhir."
+                        </p>
+                        <button onclick="proceedToNext()" class="font-modern px-6 py-3 bg-pine text-cream rounded-md hover:bg-pine/90 transition-colors duration-300 text-sm tracking-widest uppercase">
+                            Langkah Selanjutnya <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Halaman Kenangan (Baru) -->
+    <section id="sec-kenangan" class="page-section">
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-3xl my-auto">
+            <h2 class="font-title text-3xl md:text-5xl text-gold mb-8 leading-snug drop-shadow-md">
+                Dari semua yang pernah kita lalui,<br>hal apa yang paling kamu ingat?
+            </h2>
+            
+            <div class="w-full max-w-xl mx-auto mb-10">
+                <textarea 
+                    id="user-memory"
+                    rows="5" 
+                    placeholder="Tulis ingatanmu di sini..." 
+                    class="w-full bg-[#0F172A]/60 backdrop-blur-sm border border-[#1E3A34] text-[#F5F1E8] font-body text-lg md:text-xl p-5 rounded-lg focus:outline-none focus:border-[#D4B483] focus:ring-1 focus:ring-[#D4B483] transition-all duration-300 resize-none custom-scrollbar placeholder-[#F5F1E8]/30 shadow-inner"
+                ></textarea>
+            </div>
+
+            <!-- Tombol diubah menjadi Kirim Balasan dan mengarah ke pertanyaan -->
+            <button onclick="goToSection('sec-question')" class="btn-aesthetic text-xs md:text-sm">
+                Kirim Balasan <i class="fa-solid fa-paper-plane ml-2"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Section: Pertanyaan Teman (Baru) -->
+    <section id="sec-question" class="page-section">
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-3xl my-auto">
+            <h2 class="font-title text-3xl md:text-5xl text-gold mb-8 leading-snug drop-shadow-md">
+                Sebelum kamu pergi,<br>bolehkah aku tahu satu hal?
+            </h2>
+            
+            <p class="font-body text-xl md:text-2xl text-cream/90 leading-relaxed mb-12 italic">
+                "Menurutmu, apakah kita masih bisa menjadi teman yang baik seperti dulu?"
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full justify-center">
+                <button onclick="answerQuestion('Ya')" class="btn-aesthetic text-sm w-full sm:w-40 mt-0">
+                    Ya
+                </button>
+                <button onclick="answerQuestion('Mungkin')" class="btn-aesthetic text-sm w-full sm:w-40 mt-0">
+                    Mungkin
+                </button>
+                <button onclick="answerQuestion('Aku belum tahu')" class="btn-aesthetic text-sm w-full sm:w-auto mt-0">
+                    Aku belum tahu
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Wishes -->
+    <section id="sec-wishes" class="page-section" style="justify-content: flex-start; padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="relative z-10 w-full max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center my-auto">
+            
+            <!-- Gambar Hutan Vertikal -->
+            <div class="order-2 lg:order-1 rounded-xl overflow-hidden h-[250px] md:h-[400px] lg:h-[500px] shadow-2xl border border-pine/30">
+                <img src="foto.png" 
+                     alt="Moody Pine Forest" 
+                     class="w-full h-full object-cover">
+            </div>
+
+            <!-- Teks -->
+            <div class="order-1 lg:order-2 text-left space-y-4 md:space-y-6">
+                <h2 class="font-title text-2xl md:text-4xl lg:text-5xl text-gold mb-4 md:mb-8 border-b border-gold/30 pb-4">
+                    Jika Aku Bisa Meminta Satu Hal
+                </h2>
+                
+                <p class="font-body text-lg md:text-xl text-cream/90 leading-relaxed animate-fade-in opacity-0" style="animation-delay: 0.5s;">
+                    Jaga hubunganmu dengan Allah sebaik-baiknya.
+                </p>
+                <p class="font-body text-lg md:text-xl text-cream/90 leading-relaxed animate-fade-in opacity-0" style="animation-delay: 1.5s;">
+                    Sayangi Keluargamu.
+                </p>
+                <p class="font-body text-lg md:text-xl text-cream/90 leading-relaxed animate-fade-in opacity-0" style="animation-delay: 2.5s;">
+                    Pedulilah dengan orang sekitar.
+                </p>
+                <p class="font-body text-lg md:text-xl text-cream/90 leading-relaxed animate-fade-in opacity-0" style="animation-delay: 3.5s;">
+                    Jangan pernah melakukan hal yang akan membuatmu rugi kedepannya.
+                </p>
+                <p class="font-body text-lg md:text-xl text-cream/90 leading-relaxed animate-fade-in opacity-0" style="animation-delay: 4.5s;">
+                    Jangan merusak pikiran dan tubuhmu.
+                </p>
+                <p class="font-body text-lg md:text-xl text-gold leading-relaxed animate-fade-in opacity-0 italic" style="animation-delay: 5.5s;">
+                    "Apa yang kamu lakukan mungkin biasa bagimu, tetapi tidak bagiku."
+                </p>
+
+                <div class="pt-6 md:pt-8 animate-fade-in opacity-0" style="animation-delay: 7s;">
+                    <button onclick="goToSection('sec-pesan-masa-depan')" class="btn-aesthetic text-xs md:text-sm">
+                        Akhir Halaman
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Pesan untuk Masa Depan (Baru) -->
+    <section id="sec-pesan-masa-depan" class="page-section">
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-3xl my-auto">
+            
+            <div id="future-message-form" class="w-full flex flex-col items-center transition-opacity duration-500 opacity-100">
+                <h2 class="font-title text-3xl md:text-5xl text-gold mb-8 leading-snug drop-shadow-md">
+                    Tinggalkan satu pesan untuk Hesti
+                </h2>
+                
+                <div class="w-full max-w-xl mx-auto mb-10">
+                    <textarea 
+                        id="user-future"
+                        rows="5" 
+                        placeholder="Tulis pesanmu di sini..." 
+                        class="w-full bg-[#0F172A]/60 backdrop-blur-sm border border-[#1E3A34] text-[#F5F1E8] font-body text-lg md:text-xl p-5 rounded-lg focus:outline-none focus:border-[#D4B483] focus:ring-1 focus:ring-[#D4B483] transition-all duration-300 resize-none custom-scrollbar placeholder-[#F5F1E8]/30 shadow-inner"
+                    ></textarea>
+                </div>
+
+                <button onclick="submitFutureMessage()" class="btn-aesthetic text-xs md:text-sm">
+                    Kirim Pesan <i class="fa-solid fa-paper-plane ml-2"></i>
+                </button>
+            </div>
+
+            <!-- Pesan Tersimpan (Awalnya Sembunyi) -->
+            <div id="future-message-success" class="hidden flex-col items-center justify-center transition-opacity duration-700 opacity-0 absolute inset-0">
+                <p class="font-title text-3xl md:text-4xl text-cream italic mb-6">
+                    Pesanmu telah tersimpan.
+                </p>
+                <div class="text-gold text-3xl animate-pulse-slow">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section: Lembar Kertas Bukti (Baru) -->
+    <section id="sec-receipt" class="page-section" style="justify-content: flex-start; padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="relative z-10 flex flex-col items-center w-full max-w-3xl mx-auto px-4 py-10">
+            
+            <!-- Elemen Kertas yang akan dijadikan Foto -->
+            <div id="receipt-paper" class="bg-[#F5F1E8] p-8 md:p-10 rounded-sm shadow-[0_0_40px_rgba(212,180,131,0.15)] border-l-4 border-[#D4B483] w-full max-w-lg relative text-[#1E3A34] text-left">
+                <!-- Ornamen Daun Pojok -->
+                <div class="absolute top-4 right-4 text-[#D4B483]/40 text-xl"><i class="fa-solid fa-leaf"></i></div>
+                
+                <h3 class="font-title text-2xl md:text-3xl mb-6 border-b border-[#1E3A34]/20 pb-4 text-center font-semibold text-[#1E3A34]">
+                    Catatan Untuk Hesti
+                </h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <p class="font-modern text-[10px] font-bold tracking-widest text-[#1E3A34]/50 uppercase mb-1">Hal yang paling diingat:</p>
+                        <p id="receipt-memory" class="font-body text-lg italic bg-[#1E3A34]/5 p-3 rounded-md text-[#1E3A34] whitespace-pre-wrap break-words">...</p>
+                    </div>
+                    <div>
+                        <p class="font-modern text-[10px] font-bold tracking-widest text-[#1E3A34]/50 uppercase mb-1">Apakah masih bisa menjadi teman?</p>
+                        <p id="receipt-answer" class="font-body text-lg italic bg-[#1E3A34]/5 p-3 rounded-md text-[#1E3A34] whitespace-pre-wrap break-words">...</p>
+                    </div>
+                    <div>
+                        <p class="font-modern text-[10px] font-bold tracking-widest text-[#1E3A34]/50 uppercase mb-1">Pesan untuk Masa Depan:</p>
+                        <p id="receipt-future" class="font-body text-lg italic bg-[#1E3A34]/5 p-3 rounded-md text-[#1E3A34] whitespace-pre-wrap break-words">...</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 text-right font-title text-xl text-[#1E3A34]/70 italic border-t border-[#1E3A34]/10">
+                    — Dari Damar Maqribi
+                </div>
+            </div>
+
+            <!-- Tombol Aksi Unduh -->
+            <div class="mt-10 flex flex-col items-center gap-4">
+                <button onclick="downloadAndProceed()" class="font-modern px-6 py-4 bg-[#D4B483] text-[#05080f] rounded-md hover:bg-[#D4B483]/80 transition-colors duration-300 text-sm tracking-widest uppercase font-bold shadow-lg flex items-center">
+                    <i class="fa-solid fa-download mr-3 text-lg"></i> Unduh & Kirimkan Ke Hesti
+                </button>
+                
+                <!-- Tombol ini muncul setelah diunduh -->
+                <button id="btn-to-closing" onclick="goToSection('sec-closing')" class="hidden btn-aesthetic text-xs mt-2 border-transparent hover:border-[#D4B483] opacity-0 transition-opacity duration-1000">
+                    Akhiri Perjalanan <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Closing (Langit Bintang) -->
+    <section id="sec-closing" class="page-section">
+        <!-- Background Langit Malam Bintang -->
+        <div class="bg-full-cover" style="background-image: url('https://images.stockcake.com/public/2/0/f/20f5f6b7-ef16-4d76-b793-b3c4f964c2b2_large/mystical-night-sky-stockcake.jpg');"></div>
+        <div class="bg-overlay" style="background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(5, 8, 15, 0.95));"></div>
+        
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-3xl">
+            <!-- Constellation Heart (Simulated with Icons) -->
+            <div class="text-gold/60 text-2xl md:text-4xl mb-6 flex gap-2 animate-pulse-slow">
+                <i class="fa-solid fa-star text-sm -translate-y-4"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star text-sm -translate-y-4"></i>
+            </div>
+
+            <h2 class="font-title text-3xl md:text-5xl lg:text-6xl text-warmwhite mb-6">
+                Untuk Damar Maqribi
+            </h2>
+            
+            <p class="font-body text-xl md:text-2xl text-cream/90 leading-relaxed mb-10 md:mb-12">
+                Terima kasih telah menjadi bagian dari cerita yang tidak pernah benar-benar hilang dari ingatanku.
+                <span class="text-red-500 block mt-4 text-2xl">❤️</span>
+            </p>
+
+            <!-- Tombol Hug -->
+            <div id="hug-container">
+                <button onclick="sendHug()" class="btn-aesthetic flex items-center gap-2 text-xs md:text-base mt-0">
+                    <i class="fa-solid fa-envelope-open-text"></i> Kirim Pelukan Virtual
+                </button>
+            </div>
+
+            <!-- Pesan Setelah Hug -->
+            <div id="final-message" class="hidden mt-8 flex flex-col items-center">
+                <div class="text-gold text-2xl mb-4 animate-bounce">
+                    ✨ ✨ ✨
+                </div>
+                <p class="font-title text-2xl md:text-3xl text-gold italic">
+                    Semoga kamu selalu bahagia, Damar.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script>
+        // Audio Management
+        const bgMusic = document.getElementById('bg-music');
+        const audioControl = document.getElementById('audio-control');
+        const audioIcon = audioControl.querySelector('i');
+        let isPlaying = false;
+        let isLetterRead = false;
+
+        // Data Jawaban Pengguna
+        let userAnswer = "";
+
+        function startExperience() {
+            // Memulai musik Kiss The Rain
+            bgMusic.volume = 0.3;
+            
+            // Sistem deteksi otomatis untuk browser yang memblokir lagu
+            let playPromise = bgMusic.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Jika lagu berhasil diputar otomatis
+                    isPlaying = true;
+                    audioIcon.className = 'fa-solid fa-volume-high text-xl md:text-2xl';
+                    audioControl.classList.remove('hidden');
+                    setTimeout(() => {
+                        audioControl.classList.replace('opacity-0', 'opacity-100');
+                    }, 1000);
+                }).catch(error => {
+                    // Jika browser memblokir lagu (Sering terjadi di Chrome/Safari)
+                    console.log("Autoplay diblokir:", error);
+                    audioControl.classList.remove('hidden');
+                    audioControl.classList.replace('opacity-0', 'opacity-100');
+                    // Munculkan ikon silang merah berkedip agar user tahu harus diklik
+                    audioIcon.className = 'fa-solid fa-volume-xmark text-xl md:text-2xl text-red-500 animate-pulse';
+                    isPlaying = false;
+                });
+            }
+
+            goToSection('sec-intro');
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioIcon.className = 'fa-solid fa-volume-xmark text-xl md:text-2xl';
+            } else {
+                bgMusic.play();
+                audioIcon.className = 'fa-solid fa-volume-high text-xl md:text-2xl';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Navigation Logic
+        function goToSection(sectionId) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            // Tampilkan section target setelah delay kecil
+            setTimeout(() => {
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Jika di HP dan scroll ke bawah, kembalikan ke atas saat ganti halaman
+                document.getElementById(sectionId).scrollTop = 0;
+            }, 400);
+        }
+
+        // Envelope Logic
+        function openEnvelope() {
+            const wrapper = document.getElementById('envelope-trigger');
+            wrapper.classList.add('open');
+            
+            // Tunggu animasi flap terbuka, lalu munculkan modal surat
+            setTimeout(() => {
+                document.getElementById('letter-modal').classList.add('show');
+            }, 600);
+        }
+
+        function closeLetter() {
+            document.getElementById('letter-modal').classList.remove('show');
+            
+            // Tampilkan tombol next jika belum muncul
+            if (!isLetterRead) {
+                isLetterRead = true;
+                const nextBtn = document.getElementById('btn-next-wishes');
+                nextBtn.classList.remove('hidden');
+                setTimeout(() => {
+                    nextBtn.classList.replace('opacity-0', 'opacity-100');
+                }, 300);
+            }
+        }
+
+        // Logic Baru: Saat tombol Aku Sudah Membacanya diklik
+        function confirmRead() {
+            const letterText = document.getElementById('the-letter-text');
+            const thankYouMsg = document.getElementById('thank-you-message');
+            
+            // Memudarkan teks surat
+            letterText.classList.remove('opacity-100');
+            letterText.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                // Sembunyikan div teks surat
+                letterText.classList.add('hidden');
+                
+                // Tampilkan div pesan terima kasih
+                thankYouMsg.classList.remove('hidden');
+                
+                // Kembalikan scroll ke atas
+                document.getElementById('letter-scroll-area').scrollTop = 0;
+
+                // Animasi perlahan memunculkan pesan terima kasih
+                setTimeout(() => {
+                    thankYouMsg.classList.remove('opacity-0');
+                    thankYouMsg.classList.add('opacity-100');
+                }, 50);
+            }, 500); // Sinkron dengan durasi transisi
+        }
+
+        // Logic Baru: Lanjut ke bagian selanjutnya langsung dari dalam surat
+        function proceedToNext() {
+            document.getElementById('letter-modal').classList.remove('show'); // Tutup modal surat
+            isLetterRead = true; // Tandai sudah dibaca agar tombol di luar juga tersinkron
+            
+            // Tunggu modal tertutup sedikit, baru pindah halaman ke kenangan
+            setTimeout(() => {
+                goToSection('sec-kenangan');
+            }, 500);
+        }
+
+        // Menyimpan Pilihan Pertemanan
+        function answerQuestion(answer) {
+            userAnswer = answer;
+            goToSection('sec-wishes');
+        }
+
+        // Logic Pesan Masa Depan
+        function submitFutureMessage() {
+            const formDiv = document.getElementById('future-message-form');
+            const successDiv = document.getElementById('future-message-success');
+            
+            // Masukkan data jawaban Damar ke dalam kertas bukti
+            document.getElementById('receipt-memory').innerText = document.getElementById('user-memory').value || "(Tidak menulis apapun)";
+            document.getElementById('receipt-answer').innerText = userAnswer || "(Tidak dijawab)";
+            document.getElementById('receipt-future').innerText = document.getElementById('user-future').value || "(Tidak ada pesan)";
+            
+            // Hilangkan form pesan
+            formDiv.classList.remove('opacity-100');
+            formDiv.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                formDiv.classList.add('hidden');
+                successDiv.classList.remove('hidden');
+                
+                // Munculkan tulisan Pesan tersimpan
+                setTimeout(() => {
+                    successDiv.classList.remove('opacity-0');
+                    successDiv.classList.add('opacity-100');
+                    
+                    // Setelah 3 detik, alihkan ke halaman Kertas Bukti
+                    setTimeout(() => {
+                        goToSection('sec-receipt');
+                    }, 3000);
+                }, 50);
+            }, 500);
+        }
+
+        // Logic Mengubah HTML Kertas Menjadi Foto
+        function downloadAndProceed() {
+            const receipt = document.getElementById('receipt-paper');
+            const btnDownload = document.querySelector('button[onclick="downloadAndProceed()"]');
+            
+            // Ubah teks tombol untuk memberi tanda sedang memproses
+            const originalText = btnDownload.innerHTML;
+            btnDownload.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-3 text-lg"></i> Membuat Foto...';
+            
+            // Menangkap elemen #receipt-paper menjadi Canvas Foto
+            html2canvas(receipt, {
+                scale: 2, // Kualitas Resolusi HD
+                backgroundColor: "#05080f", 
+            }).then(canvas => {
+                // Konversi menjadi link Download
+                let link = document.createElement('a');
+                link.download = 'Catatan_Dari_Damar_Untuk_Hesti.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+                
+                // Kembalikan teks tombol
+                btnDownload.innerHTML = originalText;
+                
+                // Tampilkan tombol untuk mengakhiri halaman
+                const btnClosing = document.getElementById('btn-to-closing');
+                btnClosing.classList.remove('hidden');
+                setTimeout(() => {
+                    btnClosing.classList.replace('opacity-0', 'opacity-100');
+                }, 100);
+            });
+        }
+
+        // Virtual Hug Logic
+        function sendHug() {
+            document.getElementById('hug-container').style.display = 'none';
+            const finalMsg = document.getElementById('final-message');
+            finalMsg.classList.remove('hidden');
+            finalMsg.classList.add('animate-fade-in');
+        }
+
+        // Easter Egg Logic
+        function showSecret() {
+            alert("Satu hal terakhir...\n\nKalau kamu sampai menemukan pesan ini, berarti kamu benar-benar membaca semuanya.\n\nTerima kasih karena pernah menjadi seseorang yang sangat berarti.\n\n— 🌙");
+        }
+
+        // Star Cursor Trail Effect
+        document.addEventListener('mousemove', function(e) {
+            // Jangan buat star trail jika terlalu banyak elemen di memori, batasi
+            if (Math.random() > 0.4) {
+                const star = document.createElement('div');
+                star.className = 'star-trail';
+                star.style.left = e.pageX + 'px';
+                star.style.top = e.pageY + 'px';
+                document.body.appendChild(star);
+                
+                setTimeout(() => {
+                    star.remove();
+                }, 800);
+            }
+        });
+
+        // --- FITUR INTERAKTIF BARU ---
+
+        // 2. Efek Ripple (Gelombang Cahaya) setiap kali layar diklik
+        document.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.className = 'click-ripple';
+            ripple.style.left = e.pageX + 'px';
+            ripple.style.top = e.pageY + 'px';
+            
+            // Ukuran awal ripple
+            ripple.style.width = '30px';
+            ripple.style.height = '30px';
+            
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 800);
+        });
+
+        // 3. Efek 3D Tilt (Miring) pada Amplop saat mouse digerakkan di atasnya
+        const envelope = document.getElementById('envelope-trigger');
+        if(envelope) {
+            envelope.addEventListener('mousemove', function(e) {
+                if (this.classList.contains('open')) return; // Hentikan efek 3D jika surat sudah dibuka
+                
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left; // Posisi X di dalam amplop
+                const y = e.clientY - rect.top;  // Posisi Y di dalam amplop
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -15; // Max rotasi vertikal 15 derajat
+                const rotateY = ((x - centerX) / centerX) * 15;  // Max rotasi horizontal 15 derajat
+                
+                this.style.transform = `perspective(1000px) scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            envelope.addEventListener('mouseleave', function() {
+                if (this.classList.contains('open')) return;
+                // Kembalikan ke posisi semula saat mouse pergi
+                this.style.transform = 'perspective(1000px) scale(1) rotateX(0deg) rotateY(0deg)';
+            });
+        }
+
+        // 4. Efek Kunang-Kunang dan Kupu-Kupu Emas Melayang (Baru)
+        function createMagicalForestAmbient() {
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100%';
+            container.style.height = '100%';
+            container.style.pointerEvents = 'none';
+            container.style.overflow = 'hidden';
+            container.style.zIndex = '1';
+            document.body.appendChild(container);
+
+            // Buat Kunang-kunang Emas
+            for (let i = 0; i < 20; i++) {
+                const firefly = document.createElement('div');
+                firefly.className = 'ambient-firefly';
+                
+                const size = Math.random() * 4 + 2; // Ukuran bervariasi 2-6px
+                const left = Math.random() * 100; // Posisi horizontal acak
+                const duration = Math.random() * 15 + 10; // Kecepatan melayang
+                const delay = Math.random() * 10; // Jeda sebelum muncul
+                
+                firefly.style.width = `${size}px`;
+                firefly.style.height = `${size}px`;
+                firefly.style.left = `${left}vw`;
+                firefly.style.animationDuration = `${duration}s`;
+                firefly.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(firefly);
+            }
+
+            // Buat Kupu-kupu Emas menggunakan SVG
+            const butterflySVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#D4B483"><path d="M32 37.5c-2.5 0-6.5-4.5-12.5-4.5-7 0-14.5 4-14.5 12.5 0 6.5 5.5 10.5 10.5 10.5 5 0 11.5-5 16.5-11 5 6 11.5 11 16.5 11 5 0 10.5-4 10.5-10.5 0-8.5-7.5-12.5-14.5-12.5-6 0-10 4.5-12.5 4.5zM32 24.5c1.5 0 5.5-15.5 16.5-15.5 7.5 0 10.5 5.5 10.5 10.5 0 7.5-8.5 16.5-19 16.5-2 0-5.5-1-8-3.5-2.5 2.5-6 3.5-8 3.5-10.5 0-19-9-19-16.5 0-5 3-10.5 10.5-10.5 11 0 15 15.5 16.5 15.5z"/></svg>`;
+            
+            for (let i = 0; i < 8; i++) {
+                const butterfly = document.createElement('div');
+                butterfly.className = 'ambient-butterfly';
+                butterfly.innerHTML = butterflySVG;
+                
+                const size = Math.random() * 20 + 15; // Ukuran kupu-kupu
+                const left = Math.random() * 100;
+                const duration = Math.random() * 25 + 15; // Melayang lebih lambat
+                const delay = Math.random() * 15;
+                
+                butterfly.style.width = `${size}px`;
+                butterfly.style.height = `${size}px`;
+                butterfly.style.left = `${left}vw`;
+                butterfly.style.animationDuration = `${duration}s`;
+                butterfly.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(butterfly);
+            }
+        }
+        
+        // Jalankan efek lingkungan ajaib saat halaman dimuat
+        createMagicalForestAmbient();
+
+    </script>
+</body>
+</html>
